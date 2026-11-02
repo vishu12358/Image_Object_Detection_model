@@ -1,36 +1,36 @@
-completing this project in six phases.
-1. Phase 1 – Project setup
-   - Create project folder.
-   - Set up Python virtual environment.
-   - Install required libraries.
-   - Understand the dataset.
+# completing this project in six phases.
+# 1. Phase 1 – Project setup
+#    - Create project folder.
+#    - Set up Python virtual environment.
+#    - Install required libraries.
+#    - Understand the dataset.
 
-2. Phase 2 – Dataset preparation
-   - Use COCO dataset.
-   - Understand image annotations.
-   - Image preprocessing.
-   - Train/test dataset preparation.
+# 2. Phase 2 – Dataset preparation
+#    - Use COCO dataset.
+#    - Understand image annotations.
+#    - Image preprocessing.
+#    - Train/test dataset preparation.
 
-3. Phase 3 – Image classification
-   - Build an image classification model.
-   - Train or fine-tune a pretrained CNN.
-   - Evaluate accuracy and loss.
+# 3. Phase 3 – Image classification
+#    - Build an image classification model.
+#    - Train or fine-tune a pretrained CNN.
+#    - Evaluate accuracy and loss.
 
-4. Phase 4 – Object detection
-   - Implement YOLO.
-   - Detect multiple objects.
-   - Generate bounding boxes.
-   - Display confidence scores.
+# 4. Phase 4 – Object detection
+#    - Implement YOLO.
+#    - Detect multiple objects.
+#    - Generate bounding boxes.
+#    - Display confidence scores.
 
-5. Phase 5 – Model evaluation
-   - Accuracy (classification)
-   - Precision and Recall
-   - F1-score
-   - mAP (object detection)
-   - Confusion matrix
-   
-6. Phase 6 – Deployment
-   - Build Streamlit dashboard.
-   - Upload images.
-   - Real-time webcam detection.
-   - Deploy and upload source code to GitHub.
+# 5. Phase 5 – Model evaluation
+#    - Accuracy (classification)
+#    - Precision and Recall
+#    - F1-score
+#    - mAP (object detection)
+#    - Confusion matrix
+
+# 6. Phase 6 – Deployment
+#    - Build Streamlit dashboard.
+#    - Upload images.
+#    - Real-time webcam detection.
+#    - Deploy and upload source code to GitHub.
