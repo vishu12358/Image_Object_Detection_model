@@ -1,80 +1,93 @@
 
-from ultralytics import YOLO
 from pathlib import Path
-import time
+import sys
+
+from ultralytics import YOLO
 
 
-class ObjectDetector:
+# Project paths
+MODEL_PATH = Path("models/yolo26n.pt")
+OUTPUT_DIR = Path("outputs/detection")
 
-    def __init__(self):
-
-        # CPU device
-        self.device = "cpu"
-
-        # Load pretrained YOLO26 nano model
-        self.model = YOLO("yolo26n.pt")
-
-        print("YOLO26n loaded successfully!")
+DEVICE = "cpu"
+CONFIDENCE = 0.25
+IMAGE_SIZE = 640
 
 
-    def predict(self, image_path):
+def detect_objects(image_path):
 
-        # Check image existence
-        if not Path(image_path).is_file():
-            raise FileNotFoundError(
-                f"Image not found: {image_path}"
-            )
+    image_path = Path(image_path)
 
-        # Run object detection
-        start_time = time.perf_counter()
-
-        results = self.model.predict(
-            source=image_path,
-            device=self.device,
-            imgsz=640,
-            conf=0.25,
-            verbose=False
+    # Check model
+    if not MODEL_PATH.is_file():
+        raise FileNotFoundError(
+            f"YOLO model not found: {MODEL_PATH.resolve()}"
         )
 
-        inference_time = time.perf_counter() - start_time
+    # Check image
+    if not image_path.is_file():
+        raise FileNotFoundError(
+            f"Image not found: {image_path.resolve()}"
+        )
 
-        result = results[0]
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-        print("\nOBJECT DETECTION RESULTS")
-        print("-" * 40)
+    # Load YOLO26
+    model = YOLO(str(MODEL_PATH))
 
-        # Extract bounding boxes
-        if result.boxes is not None:
+    print("YOLO26 model loaded successfully!")
 
+    # Perform detection
+    results = model.predict(
+        source=str(image_path),
+        device=DEVICE,
+        imgsz=IMAGE_SIZE,
+        conf=CONFIDENCE,
+        verbose=False
+    )
+
+    for result in results:
+
+        print("\n===== DETECTION RESULTS =====")
+
+        if result.boxes is None or len(result.boxes) == 0:
+            print("No objects detected.")
+
+        else:
             for box in result.boxes:
 
                 class_id = int(box.cls.item())
-
                 confidence = float(box.conf.item())
 
-                class_name = self.model.names[class_id]
+                x1, y1, x2, y2 = (
+                    box.xyxy[0].tolist()
+                )
 
-                coordinates = box.xyxy[0].tolist()
+                label = result.names[class_id]
 
-                print(f"\nObject: {class_name}")
-                print(f"Confidence: {confidence * 100:.2f}%")
-                print(f"Bounding Box: {coordinates}")
-
-        else:
-            print("No objects detected.")
+                print("Object:", label)
+                print("Confidence:", round(confidence * 100, 2), "%")
+                print(
+                    "Bounding Box:",
+                    [round(x1, 2), round(y1, 2),
+                     round(x2, 2), round(y2, 2)]
+                )
+                print("-----------------------")
 
         # Save annotated image
-        output_path = Path("outputs/detection/result.jpg")
-        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path = OUTPUT_DIR / f"{image_path.stem}_detected.jpg"
 
         result.save(filename=str(output_path))
 
         print("\nSaved output:", output_path)
-        print(f"Inference Time: {inference_time:.4f} seconds")
 
 
 if __name__ == "__main__":
 
-    detector = ObjectDetector()
+    if len(sys.argv) < 2:
+        print(
+            "Usage: python src/detection.py <image_path>"
+        )
+        sys.exit(1)
 
-    detector.predict("dataset/sample.jpg")
+    detect_objects(sys.argv[1])
